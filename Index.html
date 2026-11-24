@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>માત્ર તારા માટે</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&display=swap" rel="stylesheet">
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #fdf2f0 0%, #fce4ec 50%, #f8bbd0 100%);
+    font-family: 'Noto Serif Gujarati', 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    padding: 20px;
+    cursor: pointer;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 16px 40px rgba(180, 60, 90, 0.14);
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lock-icon {
+    font-size: 40px;
+    font-style: normal;
+    margin-bottom: 12px;
+  }
+
+  .pass-input {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 14px;
+    border: 1.5px solid #e6b8c7;
+    font-family: 'Noto Serif Gujarati', 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+    margin: 16px 0 12px;
+    background: #fff9fb;
+    color: #2d1e24;
+  }
+
+  .pass-input:focus {
+    border-color: #d8436e;
+  }
+
+  .error-msg {
+    color: #c62828;
+    font-size: 13px;
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  #mainCard {
+    display: none;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #ffe8ef;
+    color: #b8325a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2d1e24;
+    margin-bottom: 8px;
+    letter-spacing: 0.4px;
+  }
+
+  .subtitle {
+    font-size: 14.5px;
+    color: #6d5960;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .photo-box {
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f6e7ec;
+    border: 2px dashed #e2b8c6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #8c6b75;
+    padding: 6px;
+  }
+
+  .photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .handwritten-section {
+    background: #fff9fb;
+    border: 1px solid #f3d6df;
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .handwritten-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #a8385b;
+    margin-bottom: 10px;
+    letter-spacing: 0.6px;
+  }
+
+  .handwritten-img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+
+  .apology-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #3a2930;
+  }
+
+  .btn {
+    width: 100%;
+    border: none;
+    background: linear-gradient(135deg, #d8436e, #b82952);
+    color: #fff;
+    font-family: 'Noto Serif Gujarati', 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15.5px;
+    font-weight: 600;
+    padding: 13px 18px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 20px rgba(184, 41, 82, 0.25);
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  .note-reveal {
+    display: none;
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #fff0f5;
+    color: #7a1f3d;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+  <audio id="bgMusic" src="https://files.catbox.moe/c32vhc.mp3" loop preload="auto"></audio>
+
+  <div class="card" id="lockScreen">
+    <div class="lock-icon">🔒</div>
+    <h1>મારી બાયડી મુકી ગઇ મને😭 ❤️</h1>
+    <p class="subtitle">મને તારુ સૌથી વધૂ શુ ગમે (ખોટો પડસે સમજી જાય હુ😔 </p>
+
+    <input type="password" id="passwordInput" class="pass-input" placeholder="પાસવર્ડ લખો..." onkeypress="if(event.key === 'Enter') checkPassword()">
+    <div class="error-msg" id="errorMsg">બસ ને જાન, ખબર જ હતી! 🙂</div>
+
+    <button class="btn" onclick="checkPassword()"> Goodluck ✨</button>
+  </div>
+
+  <div class="card" id="mainCard">
+    <div class="badge">ઘરના કામ વચ્ચે નાનકડી બ્રેક</div>
+    <h1>માફ કરજે ❤️</h1>
+    <p class="subtitle">તારી મહેનત અને ઘરની જવાબદારી હું સમજું છું. કોઈ ઉતાવળ કે દબાણ વગર, માત્ર તારા માટે.</p>
+
+    <div class="photo-grid">
+      <div class="photo-box">
+        <img src="photo1.jpg" alt="ફોટો 1" onerror="this.style.display='none'; this.parentNode.innerText='ફોટો 1 અહીં આવશે';">
+      </div>
+      <div class="photo-box">
+        <img src="photo2.jpg" alt="ફોટો 2" onerror="this.style.display='none'; this.parentNode.innerText='ફોટો 2 અહીં આવશે';">
+      </div>
+      <div class="photo-box">
+        <img src="photo3.jpg" alt="ફોટો 3" onerror="this.style.display='none'; this.parentNode.innerText='ફોટો 3 અહીં આવશે';">
+      </div>
+      <div class="photo-box">
+        <img src="photo4.jpg" alt="ફોટો 4" onerror="this.style.display='none'; this.parentNode.innerText='ફોટો 4 અહીં આવશે';">
+      </div>
+    </div>
+
+    <div class="handwritten-section">
+      <div class="handwritten-label">મારા દિલની વાત</div>
+
+      <img src="my-handwritten-note.jpg" alt="હાથે લખેલો મેસેજ" class="handwritten-img" onerror="this.style.display='none';">
+
+      <p class="apology-text">
+        કદાચ મારી ફરિયાદો કે વાતોથી તને ભાર લાગ્યો હોય તો દિલથી માફ કરજે. તું ખુશ રહે અને શાંતિમાં રહે એ જ મારા માટે સૌથી મોટી વાત છે.
+      </p>
+    </div>
+
+    <button class="btn" onclick="showGentleNote()">જ્યારે ફ્રી થાય ત્યારે ક્લિક કરજે</button>
+    <div class="note-reveal" id="gentleNote">
+      કોઈ ઉતાવળ નથી, કોઈ ફરિયાદ નથી. બસ તારું એક નાનકડું સ્મિત જોઈતું હતું. 😊
+    </div>
+  </div>
+
+  <script>
+    const bgMusic = document.getElementById("bgMusic");
+    let musicStarted = false;
+
+    function playSongAnywhere() {
+      if (!musicStarted && bgMusic.paused) {
+        bgMusic.play().then(() => {
+          musicStarted = true;
+        }).catch(() => {});
+      }
+    }
+
+    document.addEventListener("pointerdown", playSongAnywhere, { passive: true });
+    document.addEventListener("click", playSongAnywhere);
+    document.addEventListener("touchstart", playSongAnywhere, { passive: true });
+
+    function checkPassword() {
+      playSongAnywhere();
+      const input = document.getElementById("passwordInput").value.trim().toLowerCase();
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (input === "gand") {
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("mainCard").style.display =
